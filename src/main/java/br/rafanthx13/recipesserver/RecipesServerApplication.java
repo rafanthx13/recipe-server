@@ -11,3 +11,9 @@ public class RecipesServerApplication {
 	}
 
 }
+
+/*
+`mvn install`
+
+`mvn spring-boot:run`
+*/
