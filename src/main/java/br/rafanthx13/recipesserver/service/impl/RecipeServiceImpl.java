@@ -1,26 +1,41 @@
 package br.rafanthx13.recipesserver.service.impl;
 
+import br.rafanthx13.recipesserver.model.repository.RecipeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.rafanthx13.recipesserver.model.entity.Recipe;
 import br.rafanthx13.recipesserver.service.RecipeService;
 
 import java.util.List;
+import java.util.Optional;
 
-// import br.com.rafanthx13.libraryapi.data.entity.Book;
-// import br.com.rafanthx13.libraryapi.data.repository.BookRepository;
-// import br.com.rafanthx13.libraryapi.exception.BusinessException;
-// import br.com.rafanthx13.libraryapi.service.BookService;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-  // private BookRepository repository;
+  @Autowired
+  private RecipeRepository recipeRepository;
 
   @Override
-  public List<Recipe> geAll() {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Recipe> getAll() {
+    return recipeRepository.findAll();
+  }
+
+  @Override
+  public Optional<Recipe> findById(Long id) {
+    return recipeRepository.findById(id);
+//    return Optional.empty();
+  }
+
+  @Override
+  public Recipe save(Recipe recipe) {
+    return recipeRepository.save(recipe);
+  }
+
+  @Override
+  public void delete(Recipe recipe) {
+    recipeRepository.delete(recipe);
   }
 
   // public BookServiceImpl(BookRepository repository) {

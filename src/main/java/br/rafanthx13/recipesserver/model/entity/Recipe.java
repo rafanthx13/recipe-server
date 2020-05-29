@@ -40,3 +40,15 @@ public class Recipe {
     private String tab_others;
 
 }
+
+/*
+{
+    "title": "titulo-post",
+    "imgSrc": "image",
+    "badges": "badges",
+    "ingredients": "ingredientes",
+    "tab_prepare": "preparo",
+    "tab_comments": "comment",
+    "tab_others": "outras coisas"
+}
+ */
