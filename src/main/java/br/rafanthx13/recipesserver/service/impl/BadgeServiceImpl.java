@@ -1,6 +1,6 @@
 package br.rafanthx13.recipesserver.service.impl;
 
-import br.rafanthx13.recipesserver.model.repository.RecipeRepository;
+import br.rafanthx13.recipesserver.model.repository.BadgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class BadgeServiceImpl implements BadgeService {
 
   @Autowired
-  private BadgeRepository BadgeRepository;
+  private BadgeRepository badgeRepository;
 
   @Override
   public List<Badge> getAll() {
@@ -30,12 +30,12 @@ public class BadgeServiceImpl implements BadgeService {
 
   @Override
   public Badge save(Badge badge) {
-    return badgeRepository.save(Badge);
+    return badgeRepository.save(badge);
   }
 
   @Override
   public void delete(Badge badge) {
-    badgeRepository.delete(recipe);
+    badgeRepository.delete(badge);
   }
 
 }

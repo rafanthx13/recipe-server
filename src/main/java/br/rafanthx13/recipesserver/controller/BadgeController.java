@@ -1,8 +1,7 @@
-package br.rafanthx13.badgesserver.controller;
+package br.rafanthx13.recipesserver.controller;
 
-import br.rafanthx13.badgesserver.model.entity.Badge;
-import br.rafanthx13.badgesserver.service.BadgeService;
-import lombok.RequiredArgsConstructor;
+import br.rafanthx13.recipesserver.model.entity.Badge;
+import br.rafanthx13.recipesserver.service.BadgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

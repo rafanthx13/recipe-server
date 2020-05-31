@@ -12,4 +12,8 @@ public class ApiErrors {
     public ApiErrors(ResponseStatusException ex) {
         this.error = ex.getReason();
     }
+
+    public ApiErrors(String message){
+        this.error = message;
+    }
 }

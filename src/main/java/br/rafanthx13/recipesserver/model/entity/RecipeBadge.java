@@ -1,6 +1,5 @@
 package br.rafanthx13.recipesserver.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,20 +10,20 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table( name = "badge" )
-public class Badge {
+@Table(name = "recipe_badge")
+public class RecipeBadge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "tag", length = 100)
-    private String tag;
+    @ManyToOne
+    @JoinColumn(name = "badge_id")
+    private Badge badge_id;
 
-    @JoinColumn(name = "recipeId")
-    private Long recipeId;
-
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe_id;
 
 }
-

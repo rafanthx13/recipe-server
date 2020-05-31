@@ -1,6 +1,5 @@
 package br.rafanthx13.recipesserver.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,20 +10,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table( name = "badge" )
-public class Badge {
-
+@Table(name = "files")
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "tag", length = 100)
-    private String tag;
+    @Column(name = "file_name", length = 200)
+    private String file_name;
 
-    @JoinColumn(name = "recipeId")
-    private Long recipeId;
+    @Column(name = "file_type", length = 200)
+    private String file_type;
 
-
+    @Lob
+    private byte[] data;
 }
-

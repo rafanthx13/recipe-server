@@ -1,5 +1,6 @@
 package br.rafanthx13.recipesserver.controller;
 
+import br.rafanthx13.recipesserver.model.dto.PostRecipeDTO;
 import br.rafanthx13.recipesserver.model.entity.Recipe;
 import br.rafanthx13.recipesserver.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,23 @@ public class RecipeController {
 								"Cliente não encontrado"));
 	}
 
+	@GetMapping("/re/")
+	public List<PostRecipeDTO> getAllRecipe(){
+		return recipeService.getAllRecipe();
+
+	}
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public void saveRecipe(@RequestBody @Valid Recipe recipe){
 		recipeService.save(recipe);
+	}
+
+	@PostMapping("/re/")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void saveRecipeRe(@RequestBody @Valid PostRecipeDTO postRecipeDTO){
+
+		recipeService.saveRe(postRecipeDTO);
 	}
 
 	@PutMapping("{id}")
@@ -63,5 +77,7 @@ public class RecipeController {
 				.orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND) );
 		recipeService.delete(recipe);
 	}
+
+
 
 }

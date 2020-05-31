@@ -1,4 +1,13 @@
 -- mysql
+-- Akashi4die_1301
+
+SELECT b.tag
+FROM recipe r
+LEFT JOIN recipe_badge rb ON r.id = rb.recipe_id
+LEFT JOIN badge b ON b.id = rb.badge_id
+WHERE r.id = 2;
+
+
 
 CREATE TABLE `recipe_app`.`recipe` (
   `id` INT NOT NULL AUTO_INCREMENT,
