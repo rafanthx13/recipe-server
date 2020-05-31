@@ -34,11 +34,11 @@ public class RecipeController {
 								"Cliente não encontrado"));
 	}
 
-	@GetMapping("/re/")
-	public List<PostRecipeDTO> getAllRecipe(){
-		return recipeService.getAllRecipe();
+	// @GetMapping("/re/")
+	// public List<PostRecipeDTO> getAllRecipe(){
+	// 	return recipeService.getAllRecipe();
 
-	}
+	// }
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

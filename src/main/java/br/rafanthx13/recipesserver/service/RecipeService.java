@@ -13,7 +13,7 @@ public interface RecipeService {
 
   Optional<Recipe> findById(Long id);
 
-  List<PostRecipeDTO> getAllRecipe();
+  // List<PostRecipeDTO> getAllRecipe();
 
   Recipe save(Recipe recipe);
 

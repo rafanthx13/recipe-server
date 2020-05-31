@@ -9,12 +9,12 @@ import java.util.List;
 
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 
-    @Query(name = "SELECT b.id, b.tag\n" +
-            "FROM recipe r\n" +
-            "LEFT JOIN recipe_badge rb ON r.id = rb.recipe_id\n" +
-            "LEFT JOIN badge b ON b.id = rb.badge_id\n" +
-            "WHERE r.id = :id_recipe;", nativeQuery = true)
-    List<Badge> join( @Param("id_recipe") Long recipeId);
+    // @Query(name = "SELECT b.id, b.tag\n" +
+    //         "FROM recipe r\n" +
+    //         "LEFT JOIN recipe_badge rb ON r.id = rb.recipe_id\n" +
+    //         "LEFT JOIN badge b ON b.id = rb.badge_id\n" +
+    //         "WHERE r.id = :id_recipe;", nativeQuery = true)
+    // List<Badge> join( @Param("id_recipe") Long recipeId);
 // :name
   /*
   // True :: Livro Está emprestado; False: Livro Está disponível

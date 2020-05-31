@@ -42,25 +42,25 @@ public class RecipeServiceImpl implements RecipeService {
 //    return Optional.empty();
   }
 
-  @Override
-  public List<PostRecipeDTO> getAllRecipe() {
-    List<Recipe> recipes = recipeRepository.findAll();
-    return recipes.stream().map(recipe -> {
-      PostRecipeDTO postRecipeDTO = new PostRecipeDTO()
-              .builder()
-              .title(recipe.getTitle())
-              .ingredients(recipe.getIngredients())
-              .tab_comments(recipe.getTab_comments())
-              .tab_prepare(recipe.getTab_prepare())
-              .tab_others(recipe.getTab_others())
-              .imgSrc(recipe.getImgSrc())
-              .build();
-      List<Badge> listBadges = badgeRepository.join(recipe.getId());
-      postRecipeDTO.setBadges(listBadges);
-      return postRecipeDTO;
-      // pra pegar tem que usar BadgeRepository
-    }).collect(Collectors.toList());
-  }
+  // @Override
+  // public List<PostRecipeDTO> getAllRecipe() {
+  //   List<Recipe> recipes = recipeRepository.findAll();
+  //   return recipes.stream().map(recipe -> {
+  //     PostRecipeDTO postRecipeDTO = new PostRecipeDTO()
+  //             .builder()
+  //             .title(recipe.getTitle())
+  //             .ingredients(recipe.getIngredients())
+  //             .tab_comments(recipe.getTab_comments())
+  //             .tab_prepare(recipe.getTab_prepare())
+  //             .tab_others(recipe.getTab_others())
+  //             .imgSrc(recipe.getImgSrc())
+  //             .build();
+  //     List<Badge> listBadges = badgeRepository.findById(recipe.getId());
+  //     postRecipeDTO.setBadges(listBadges);
+  //     return postRecipeDTO;
+  //     // pra pegar tem que usar BadgeRepository
+  //   }).collect(Collectors.toList());
+  // }
 
   @Override
   public Recipe save(Recipe recipe) {
@@ -75,7 +75,7 @@ public class RecipeServiceImpl implements RecipeService {
             .builder()
             .imgSrc(recipeWithBadges.getImgSrc())
             .title(recipeWithBadges.getTitle())
-            .badges("1")
+            // .badges("1")
             .ingredients(recipeWithBadges.getIngredients())
             .tab_comments(recipeWithBadges.getTab_comments())
             .tab_prepare(recipeWithBadges.getTab_prepare())

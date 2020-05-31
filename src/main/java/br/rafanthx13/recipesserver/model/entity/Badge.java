@@ -22,9 +22,26 @@ public class Badge {
     @Column(name = "tag", length = 100)
     private String tag;
 
-    @JoinColumn(name = "recipeId")
-    private Long recipeId;
+}
 
+/*
+@Table(name = "produto")
+public class Produto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "descricao")
+    @NotEmpty(message = "{campo.descricao.obrigatorio}")
+    private String descricao;
+
+    @Column(name = "preco_unitario")
+    @NotNull(message = "{campo.preco.obrigatorio}")
+    private BigDecimal preco;
 
 }
+
+*/
 

@@ -5,6 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 
+import br.rafanthx13.recipesserver.model.entity.Badge;
+
+import java.util.List;
+
 import javax.persistence.*;
 
 @Data
@@ -26,9 +30,6 @@ public class Recipe {
     @Column(name = "img_src", length = 200)
     private String imgSrc;
 
-    @Column(name = "badges", length = 200)
-    private String badges;
-
     @Column(name = "ingredients", length = 200)
     private String ingredients;
 
@@ -40,6 +41,28 @@ public class Recipe {
 
     @Column(name = "tab_others", length = 200)
     private String tab_others;
+
+    /* Funciona
+    http://www.universidadejava.com.br/materiais/jpa-manytomany/
+    Uma Recipe virá com várias Badges no atributo list_badges: [] ou [{id, tag}]
+    Referencia a tabela [name = recipe_badge] sendo que se for fazer joins, use id com recipe_id
+    + Funciona com Get: quando REcipeRepository bai buscar uma Recipe ele vai buscar pelo id em
+        "recipe_badge" no attr "recipe_id" encontrar "badge_id" e retornar uma lista de Badges
+    + Funciona com POST: Se tiver list_badges, ele faz outras inserçôes na tabela intermediario, 
+    + OU seja, ele faz o quivalente há ...
+    SELECT b.tag
+    FROM recipe r
+    LEFT JOIN recipe_badge rb ON r.id = rb.recipe_id
+    LEFT JOIN badge b ON b.id = rb.badge_id
+    WHERE r.id = 2;
+    + Nâo precisou colocar nada em Badge
+
+    */
+    @OneToMany()
+    @JoinTable(name="recipe_badge",
+             joinColumns={@JoinColumn(name="recipe_id")},
+             inverseJoinColumns={@JoinColumn(name="badge_id")})
+    private List<Badge> badges;
 
 }
 
@@ -54,3 +77,33 @@ public class Recipe {
     "tab_others": "outras coisas"
 }
  */
+
+/*
+@Table(name = "pedido")
+public class Pedido {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
+    @Column(name = "data_pedido")
+    private LocalDate dataPedido;
+
+    @Column(name = "total", precision = 20, scale = 2)
+    private BigDecimal total;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusPedido status;
+
+    @OneToMany(mappedBy = "pedido")
+    private List<ItemPedido> itens;
+
+}
+
+*/
