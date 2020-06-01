@@ -12,14 +12,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "image")
 public class Image {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_name", length = 200)
+    @Column(name = "fileName", length = 200)
     private String fileName;
 
-    @Column(name = "file_type", length = 200)
+    @Column(name = "fileType", length = 200)
     private String fileType;
 
     @Lob

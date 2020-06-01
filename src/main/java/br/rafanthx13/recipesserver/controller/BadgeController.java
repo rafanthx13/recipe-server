@@ -18,11 +18,13 @@ public class BadgeController {
 	private BadgeService badgeService;
 
 	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
 	public List<Badge> getAllBadges(){
 		return badgeService.getAll();
 	}
 
 	@GetMapping("{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public Badge getBadgeById(@PathVariable Long id ){
 		return badgeService.findById(id)
 				.orElseThrow(() ->

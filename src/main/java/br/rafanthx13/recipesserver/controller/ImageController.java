@@ -35,6 +35,7 @@ public class ImageController {
                 file.getContentType(),
                 compressBytes(file.getBytes()));
         imageRepository.save(img);
+        // Deve retonrar Id para ser usado depois, se já tiver a imagem, entoa so volta o ID
     }
     @GetMapping(path = { "/get/{imageName}" })
     public Image getImage(@PathVariable("imageName") String imageName) throws IOException {
@@ -42,7 +43,9 @@ public class ImageController {
         Image img = new Image(
                 retrievedImage.get().getFileName(),
                 retrievedImage.get().getFileType(),
-                decompressBytes(retrievedImage.get().getData()));
+                decompressBytes(retrievedImage.get().getData())
+        );
+        img.setId(retrievedImage.get().getId());
         return img;
     }
 
