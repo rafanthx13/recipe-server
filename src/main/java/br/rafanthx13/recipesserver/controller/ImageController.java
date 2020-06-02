@@ -47,6 +47,23 @@ public class ImageController {
         return responseImageDTO;
         // Deve retornar Id para ser usado depois, se já tiver a imagem, entoa so volta o ID
     }
+
+    @GetMapping(path = { "/get/id/{id}" })
+    public Image getStorageImageById(@PathVariable("id") Long id) {
+        Image retrievedImage = imageRepository.findById(id)
+                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Busca de Imagem por ID nao encontrada"));
+
+        Image img = new Image(
+                retrievedImage.getFileName(),
+                retrievedImage.getFileType(),
+                decompressBytes(retrievedImage.getData())
+        );
+        img.setId(retrievedImage.getId());
+        return img;
+    }
+
+
     @GetMapping(path = { "/get/{imageName}" })
     public Image getStorageImage(@PathVariable("imageName") String imageName) {
         Image retrievedImage = imageRepository.findByFileName(imageName)

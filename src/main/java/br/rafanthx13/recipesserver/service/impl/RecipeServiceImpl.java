@@ -67,10 +67,13 @@ public class RecipeServiceImpl implements RecipeService {
     return recipeRepository.save(recipe);
   }
 
+  // É ESSE QUE É PRA USAR
   @Override
   @Transactional
   public Recipe saveRe(PostRecipeDTO recipeWithBadges) {
     // Fazer dois salvamentos, o da receita e de cada um dos badges
+    System.out.println("----------------");
+    System.out.println(recipeWithBadges.getImgSrc());
     Recipe recipe = new Recipe()
             .builder()
             .imgSrc(recipeWithBadges.getImgSrc())
@@ -81,7 +84,8 @@ public class RecipeServiceImpl implements RecipeService {
             .tab_prepare(recipeWithBadges.getTab_prepare())
             .tab_others(recipeWithBadges.getTab_others())
             .build();
-
+    System.out.println("*********************");
+    System.out.println(recipe.getImgSrc());
     Recipe recipeSaved = recipeRepository.save(recipe);
     Long idRecipe = recipeSaved.getId();
 

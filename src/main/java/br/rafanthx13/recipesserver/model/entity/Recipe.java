@@ -27,7 +27,7 @@ public class Recipe {
     @Column(name = "title", length = 100)
     private String title;
 
-    @Column(name = "img_src", insertable = false, updatable = false)
+    @Column(name = "img_src")
     private Long imgSrc;
 
     @Column(name = "ingredients", length = 200)
@@ -64,12 +64,13 @@ public class Recipe {
              inverseJoinColumns={@JoinColumn(name="badge_id")})
     private List<Badge> badges;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
 //    @JoinTable(name="image",
 //            joinColumns = {@JoinColumn(name="id", referencedColumnName="img_src"),
 //            }
 //    )
-    @JoinColumn(name = "img_src", referencedColumnName = "id")
+    // O hibernate nao aceita dois mapemaento á 'img_src' entao, um deles tem que ter  insertable=false, updatable=false
+    @JoinColumn(name = "img_src", referencedColumnName = "id", insertable=false, updatable=false)
     private Image image;
 
 }
