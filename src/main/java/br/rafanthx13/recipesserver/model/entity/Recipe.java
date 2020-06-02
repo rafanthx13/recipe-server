@@ -27,8 +27,8 @@ public class Recipe {
     @Column(name = "title", length = 100)
     private String title;
 
-    @Column(name = "img_src", length = 200)
-    private String imgSrc;
+    @Column(name = "img_src", insertable = false, updatable = false)
+    private Long imgSrc;
 
     @Column(name = "ingredients", length = 200)
     private String ingredients;
@@ -60,9 +60,17 @@ public class Recipe {
     */
     @OneToMany()
     @JoinTable(name="recipe_badge",
-             joinColumns={@JoinColumn(name="recipe_id")},
+             joinColumns={@JoinColumn(name="id")},
              inverseJoinColumns={@JoinColumn(name="badge_id")})
     private List<Badge> badges;
+
+    @OneToOne(cascade=CascadeType.ALL)
+//    @JoinTable(name="image",
+//            joinColumns = {@JoinColumn(name="id", referencedColumnName="img_src"),
+//            }
+//    )
+    @JoinColumn(name = "img_src", referencedColumnName = "id")
+    private Image image;
 
 }
 

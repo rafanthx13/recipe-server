@@ -1,14 +1,14 @@
 package br.rafanthx13.recipesserver.controller;
 
+import br.rafanthx13.recipesserver.model.dto.ResponseImageDTO;
 import br.rafanthx13.recipesserver.model.entity.Image;
 import br.rafanthx13.recipesserver.model.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,24 +28,37 @@ public class ImageController {
 
     @PostMapping("/upload")
     @ResponseStatus(HttpStatus.OK)
-    public void uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
+    public ResponseImageDTO uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
         System.out.println("Original Image Byte Size - " + file.getBytes().length);
         Image img = new Image(
                 file.getOriginalFilename(),
                 file.getContentType(),
                 compressBytes(file.getBytes()));
-        imageRepository.save(img);
-        // Deve retonrar Id para ser usado depois, se já tiver a imagem, entoa so volta o ID
+        Optional<Image> repeatImage = imageRepository.findByFileName(file.getOriginalFilename());
+        ResponseImageDTO responseImageDTO = new ResponseImageDTO();
+        if(repeatImage.isPresent()){
+            responseImageDTO.setImageId(repeatImage.get().getId());
+            responseImageDTO.setRepeat(true);
+            return responseImageDTO;
+        }
+        Image postedImage = imageRepository.save(img);
+        responseImageDTO.setImageId(postedImage.getId());
+        responseImageDTO.setRepeat(false);
+        return responseImageDTO;
+        // Deve retornar Id para ser usado depois, se já tiver a imagem, entoa so volta o ID
     }
     @GetMapping(path = { "/get/{imageName}" })
-    public Image getImage(@PathVariable("imageName") String imageName) throws IOException {
-        final Optional<Image> retrievedImage = imageRepository.findByFileName(imageName);
+    public Image getStorageImage(@PathVariable("imageName") String imageName) {
+        Image retrievedImage = imageRepository.findByFileName(imageName)
+                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cliente não encontrado"));
+
         Image img = new Image(
-                retrievedImage.get().getFileName(),
-                retrievedImage.get().getFileType(),
-                decompressBytes(retrievedImage.get().getData())
+                retrievedImage.getFileName(),
+                retrievedImage.getFileType(),
+                decompressBytes(retrievedImage.getData())
         );
-        img.setId(retrievedImage.get().getId());
+        img.setId(retrievedImage.getId());
         return img;
     }
 
@@ -63,6 +76,7 @@ public class ImageController {
         try {
             outputStream.close();
         } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Erro IO");
         }
         System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
         return outputStream.toByteArray();
@@ -81,7 +95,9 @@ public class ImageController {
             }
             outputStream.close();
         } catch (IOException ioe) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error IOException");
         } catch (DataFormatException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error DataFormatException");
         }
         return outputStream.toByteArray();
     }

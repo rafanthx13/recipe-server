@@ -18,7 +18,7 @@ public class PostRecipeDTO {
 
     @NotEmpty
     private String title;
-    private String imgSrc;
+    private Long imgSrc;
     private List<Badge> badges;
     private String ingredients;
     private String tab_prepare;

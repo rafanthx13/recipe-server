@@ -28,7 +28,7 @@ public class ResponseRecipeDTO {
 
     private Long id;
     private String title;
-    private String imgSrc;
+    private Long imgSrc;
     private List<String> badges;
     private String ingredients;
     private String tab_prepare;

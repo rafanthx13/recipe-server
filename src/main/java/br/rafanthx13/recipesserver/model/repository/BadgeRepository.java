@@ -2,10 +2,6 @@ package br.rafanthx13.recipesserver.model.repository;
 
 import br.rafanthx13.recipesserver.model.entity.Badge;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 
