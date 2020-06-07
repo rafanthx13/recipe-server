@@ -79,24 +79,24 @@ public class RecipeController {
 	}
 
 	// uncompress the image bytes before returning it to the angular application
-    public  byte[] decompressBytes(byte[] data) {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        try {
-            while (!inflater.finished()) {
-                int count = inflater.inflate(buffer);
-                outputStream.write(buffer, 0, count);
-            }
-            outputStream.close();
-        } catch (IOException ioe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error IOException");
-        } catch (DataFormatException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error DataFormatException");
-        }
-        return outputStream.toByteArray();
-    }
+    // public  byte[] decompressBytes(byte[] data) {
+    //     Inflater inflater = new Inflater();
+    //     inflater.setInput(data);
+    //     ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+    //     byte[] buffer = new byte[1024];
+    //     try {
+    //         while (!inflater.finished()) {
+    //             int count = inflater.inflate(buffer);
+    //             outputStream.write(buffer, 0, count);
+    //         }
+    //         outputStream.close();
+    //     } catch (IOException ioe) {
+    //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error IOException");
+    //     } catch (DataFormatException e) {
+    //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error DataFormatException");
+    //     }
+    //     return outputStream.toByteArray();
+    // }
 
 
 

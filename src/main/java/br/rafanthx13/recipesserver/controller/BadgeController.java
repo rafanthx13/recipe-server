@@ -38,6 +38,9 @@ public class BadgeController {
 		badgeService.save(badge);
 	}
 
+	// COm edit e dele se preocupar com FK (já está sendo referenciado)
+	// O mesmo com deleter receita
+
 	@PutMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void update( @PathVariable Long id,
