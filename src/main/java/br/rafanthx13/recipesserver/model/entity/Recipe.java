@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -58,7 +60,7 @@ public class Recipe {
     + Nâo precisou colocar nada em Badge
 
     */
-    @OneToMany()
+    @OneToMany(fetch = FetchType.LAZY, cascade=ALL )
     @JoinTable(name="recipe_badge",
              joinColumns={@JoinColumn(name="id")},
              inverseJoinColumns={@JoinColumn(name="badge_id")})
@@ -76,6 +78,18 @@ public class Recipe {
 }
 
 /*
+
+{
+    "title": "titulo-post88888",
+    "imgSrc": 1,
+    "badges": [{"id":1,"tag":"Tag1"}],
+    "ingredients": "ingredientes",
+    "tab_prepare": "preparo",
+    "tab_comments": "comment",
+    "tab_others": "outras coisas"
+}
+
+
 {
     "title": "titulo-post",
     "imgSrc": "image",

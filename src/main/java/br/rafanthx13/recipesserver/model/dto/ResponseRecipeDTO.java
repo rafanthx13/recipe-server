@@ -2,6 +2,7 @@ package br.rafanthx13.recipesserver.model.dto;
 
 import java.util.List;
 
+import br.rafanthx13.recipesserver.model.entity.Badge;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class ResponseRecipeDTO {
     private Long id;
     private String title;
     private Long imgSrc;
-    private List<String> badges;
+    private List<Badge> badges;
     private String ingredients;
     private String tab_prepare;
     private String tab_comments;

@@ -14,15 +14,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-
 @RestController // Controlador Rest
-@RequestMapping("/images") // Base URL
 @RequiredArgsConstructor // Gera e injeta os objetos privados
 public class ImageController {
 
@@ -51,36 +48,64 @@ public class ImageController {
         // Deve retornar Id para ser usado depois, se já tiver a imagem, entoa so volta o ID
     }
 
-    @GetMapping(path = { "/get/id/{id}" })
-    public Image getStorageImageById(@PathVariable("id") Long id) {
-        Image retrievedImage = imageRepository.findById(id)
-                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Busca de Imagem por ID nao encontrada"));
-
-        Image img = new Image(
-                retrievedImage.getFileName(),
-                retrievedImage.getFileType(),
-                decompressBytes(retrievedImage.getData())
-        );
-        img.setId(retrievedImage.getId());
-        return img;
+    @GetMapping("image/{name}")
+    public ResponseEntity<byte[]> fromDatabaseAsResEntity(@PathVariable("name") String name) {
+        Optional<Image> theImage = imageRepository.findByFileName(name);
+        byte[] imageBytes = null;
+        if (theImage.isPresent()) {
+            String type = theImage.get().getFileType();
+            imageBytes = decompressBytes(theImage.get().getData());
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
     }
 
+    // retorna byte
+//    @GetMapping(path = { "/get/id/{id}" })
+//    public Image getStorageImageById(@PathVariable("id") Long id) {
+//        Image retrievedImage = imageRepository.findById(id)
+//                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+//                        "Busca de Imagem por ID nao encontrada"));
+//
+//        Image img = new Image(
+//                retrievedImage.getFileName(),
+//                retrievedImage.getFileType(),
+//                decompressBytes(retrievedImage.getData())
+//        );
+//        img.setId(retrievedImage.getId());
+//        return img;
+//    }
 
-    @GetMapping(path = { "/get/{imageName}" })
-    public Image getStorageImage(@PathVariable("imageName") String imageName) {
-        Image retrievedImage = imageRepository.findByFileName(imageName)
-                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Cliente não encontrado"));
 
-        Image img = new Image(
-                retrievedImage.getFileName(),
-                retrievedImage.getFileType(),
-                decompressBytes(retrievedImage.getData())
-        );
-        img.setId(retrievedImage.getId());
-        return img;
-    }
+//    // retorna byte
+//    @GetMapping(path = { "/get/{imageName}" })
+//    public Image getStorageImage(@PathVariable("imageName") String imageName) {
+//        Image retrievedImage = imageRepository.findByFileName(imageName)
+//                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+//                        "Cliente não encontrado"));
+//
+//        Image img = new Image(
+//                retrievedImage.getFileName(),
+//                retrievedImage.getFileType(),
+//                decompressBytes(retrievedImage.getData())
+//        );
+//        img.setId(retrievedImage.getId());
+//        return img;
+//    }
+
+    //    @GetMapping("image/id/{id}")
+//    public ResponseEntity<byte[]> fromDatabaseAsResEntity(@PathVariable("id") Long id) {
+//
+//        Optional<Image> theImage = imageRepository.findById(id);
+//
+//        byte[] imageBytes = null;
+//        if (theImage.isPresent()) {
+//            String type = theImage.get().getFileType();
+//            imageBytes = decompressBytes(theImage.get().getData());
+//        }
+//
+//        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+//    }
+
 
     // compress the image bytes before storing it in the database
     public static byte[] compressBytes(byte[] data) {
@@ -122,18 +147,7 @@ public class ImageController {
         return outputStream.toByteArray();
     }
 
-    @GetMapping("database/{id}")
-    public ResponseEntity<byte[]> fromDatabaseAsResEntity(@PathVariable("id") Long id) {
 
-        Optional<Image> theImage = imageRepository.findById(id);
 
-        byte[] imageBytes = null;
-        if (theImage.isPresent()) {
-            String type = theImage.get().getFileType();
-            imageBytes = decompressBytes(theImage.get().getData());
-        }
-
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
-    }
 
 }

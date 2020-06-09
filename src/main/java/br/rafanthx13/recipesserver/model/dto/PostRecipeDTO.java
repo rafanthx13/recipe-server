@@ -18,7 +18,6 @@ public class PostRecipeDTO {
 
     @NotEmpty
     private String title;
-    
     private Long imgSrc;
     private List<Badge> badges;
     private String ingredients;
@@ -33,7 +32,7 @@ public class PostRecipeDTO {
     "title": "titulo-post",
     "imgSrc": "fffff",
     "badges": "badges",
-    "ingredientes": "ingredientes",
+    "ingredients": "ingredientes",
     "tab_prepare": "preparo",
     "tab_comments": "comentarios",
     "tab_others": "outras coisas"
@@ -41,12 +40,12 @@ public class PostRecipeDTO {
 
 {
     "title": "titulo-post",
-    "imgSrc": "fffff",
+    "imgSrc": 2",
     "badges": [
     {"id": 1, "tag": "Tag1"},
     {"id": 2, "tag": "tag3"}
     ],
-    "ingredientes": "ingredientes",
+    "ingredients": "ingredientes",
     "tab_prepare": "preparo",
     "tab_comments": "comentarios",
     "tab_others": "outras coisas"

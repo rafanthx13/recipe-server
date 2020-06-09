@@ -13,6 +13,22 @@ public class RecipesServerApplication {
 }
 
 /*
+main
++ recipes/get_all : busca todas as receitas so sem a image e nem busca a imagem no back, so id dela
++ image/data_base/1 : busca a imagem
+
+recipe
++ PSOT : recipe/re/  : Funciona no Re
++ PUT
++ DELETE
+
+BD
+RECIPE_BADGE: CACADE IN UPDATE AND DLEETE
++ TIRAR COLUNA BADGES DE IMAGE
+
+ */
+
+/*
 `mvn install`
 
 `mvn spring-boot:run`

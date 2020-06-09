@@ -5,9 +5,8 @@ import br.rafanthx13.recipesserver.model.dto.PostRecipeDTO;
 import br.rafanthx13.recipesserver.model.entity.Badge;
 import br.rafanthx13.recipesserver.model.entity.Recipe;
 import br.rafanthx13.recipesserver.model.entity.RecipeBadge;
-import br.rafanthx13.recipesserver.model.repository.BadgeRepository;
-import br.rafanthx13.recipesserver.model.repository.RecipeBadgeRepository;
-import br.rafanthx13.recipesserver.model.repository.RecipeRepository;
+import br.rafanthx13.recipesserver.model.entity.RecipeGet;
+import br.rafanthx13.recipesserver.model.repository.*;
 import br.rafanthx13.recipesserver.service.BadgeService;
 import br.rafanthx13.recipesserver.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static br.rafanthx13.recipesserver.exception.ApiErrors.errorNotFound;
+
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -25,15 +26,35 @@ public class RecipeServiceImpl implements RecipeService {
   @Autowired
   private RecipeRepository recipeRepository;
   @Autowired
+  private RecipeGetRepository recipeGetRepository;
+  @Autowired
   private RecipeBadgeRepository recipeBadgeRepository;
   @Autowired
   private BadgeRepository badgeRepository;
   @Autowired
   private BadgeService badgeService;
+  @Autowired
+  private ImageRepository imageRepository;
 
   @Override
   public List<Recipe> getAll() {
     return recipeRepository.findAll();
+  }
+
+  public List<RecipeGet> getAllRecipes(){
+      return recipeGetRepository.findAll().stream().map( recipe -> {
+          List<RecipeBadge> listRecipeBadge = recipeBadgeRepository.findReByRecipeId(recipe.getId());
+          String imageSource = imageRepository.findOnlyNameById(recipe.getImgSrc()).get();
+          // se tiver tira as badges tira de recipeBadgE
+          if(listRecipeBadge.size() != 0){
+              List<Badge> listBadge = listRecipeBadge.stream()
+                      .map(element -> element.getBadge_id())
+                      .collect(Collectors.toList());
+              recipe.setBadges(listBadge);
+          }
+          recipe.setImgSource(imageSource);
+          return recipe;
+      }).collect(Collectors.toList());
   }
 
   @Override
@@ -41,6 +62,74 @@ public class RecipeServiceImpl implements RecipeService {
     return recipeRepository.findById(id);
 //    return Optional.empty();
   }
+
+    @Override
+    public RecipeGet getById(Long id) {
+        RecipeGet recipe = recipeGetRepository.findById(id)
+                .orElseThrow( () -> errorNotFound("Receita não encontrada"));
+        // Pegar Imagem
+        if(recipe.getImgSrc() == null){
+            throw errorNotFound("Receita não tem Id de imagem");
+        }
+        String imageSource = imageRepository.findOnlyNameById(recipe.getImgSrc())
+                .orElseThrow( () -> errorNotFound("Imagem da receita não encontrada"));
+        recipe.setImgSource(imageSource);
+        // Badges
+        List<RecipeBadge> listRecipeBadge = recipeBadgeRepository.findReByRecipeId(recipe.getId());
+        if(listRecipeBadge.size() != 0){
+            List<Badge> listBadge = listRecipeBadge.stream()
+                    .map(element -> element.getBadge_id())
+                    .collect(Collectors.toList());
+            recipe.setBadges(listBadge);
+        }
+
+        return recipe;
+    }
+
+
+    @Override
+    @Transactional
+    public void updateRe(PostRecipeDTO recipeWithBadges, Long id){
+        Recipe recipe = new Recipe()
+                .builder()
+                .id(id)
+                .imgSrc(recipeWithBadges.getImgSrc())
+                .title(recipeWithBadges.getTitle())
+                // .badges("1")
+                .ingredients(recipeWithBadges.getIngredients())
+                .tab_comments(recipeWithBadges.getTab_comments())
+                .tab_prepare(recipeWithBadges.getTab_prepare())
+                .tab_others(recipeWithBadges.getTab_others())
+                .build();
+        System.out.println("*********************");
+        System.out.println(recipe.getImgSrc());
+        Recipe recipeSaved = recipeRepository.save(recipe);
+        Long idRecipe = recipeSaved.getId();
+        if(recipeWithBadges.getBadges().size() != 0){
+            // Salva recipe_badges
+            List<RecipeBadge> recipesBadges = convert(recipeWithBadges.getBadges(), idRecipe);
+            // apaga todos
+            recipeBadgeRepository.deleteByRecipe_id(idRecipe);
+//            recipeBadgeRepository.deleteAll();
+//            recipeBadgeRepository
+            // insere todos
+            recipeBadgeRepository.saveAll(recipesBadges);
+//            for(RecipeBadge recipeBadge : recipesBadges){
+//
+//                Optional<RecipeBadge> existRecipeBadge = recipeBadgeRepository.findByRecipe_idAndBadge_id(
+//                            recipeBadge.getRecipe_id().getId(),
+//                            recipeBadge.getRecipe_id().getId());
+//                if(existRecipeBadge.isPresent()){
+//                    // nao faz nada pois ja esta la
+////                    recipeBadgeRepository
+//                } else {
+//                    // adiicona novos elementos
+//                    recipeBadgeRepository.save(existRecipeBadge.get());
+//                }
+//            }
+//            recipeBadgeRepository.saveAll(recipesBadges);
+        }
+    }
 
   // @Override
   // public List<PostRecipeDTO> getAllRecipe() {
@@ -72,6 +161,9 @@ public class RecipeServiceImpl implements RecipeService {
   @Transactional
   public Recipe saveRe(PostRecipeDTO recipeWithBadges) {
     // Fazer dois salvamentos, o da receita e de cada um dos badges
+      if(recipeRepository.existsByTitle(recipeWithBadges.getTitle())){
+          throw errorNotFound("Receita com esse título já existe");
+      }
     System.out.println("----------------");
     System.out.println(recipeWithBadges.getImgSrc());
     Recipe recipe = new Recipe()

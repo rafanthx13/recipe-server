@@ -2,6 +2,11 @@ package br.rafanthx13.recipesserver.controller;
 
 import br.rafanthx13.recipesserver.model.dto.PostRecipeDTO;
 import br.rafanthx13.recipesserver.model.entity.Recipe;
+import br.rafanthx13.recipesserver.model.entity.RecipeGet;
+import br.rafanthx13.recipesserver.model.repository.ImageRepository;
+import br.rafanthx13.recipesserver.model.repository.RecipeBadgeRepository;
+import br.rafanthx13.recipesserver.model.repository.RecipeGetRepository;
+import br.rafanthx13.recipesserver.model.repository.RecipeRepository;
 import br.rafanthx13.recipesserver.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,58 +25,57 @@ public class RecipeController {
 	// private final RecipeService recipeService;
 	@Autowired
 	private RecipeService recipeService;
+	@Autowired
+	private RecipeRepository recipeRepository;
+	@Autowired
+	private RecipeBadgeRepository recipeBadgeRepository;
+	@Autowired
+	private RecipeGetRepository recipeGetRepository;
+	@Autowired
+	private ImageRepository imageRepository;
 
+	// @@ Get que retorna Imagem também
+	/*
 	@GetMapping
 	public List<Recipe> getAllRecipes(){
 		return recipeService.getAll();
 	}
+	*/
 
-	@GetMapping("{id}")
-	public Recipe getRecipeById(@PathVariable Long id ){
-		return recipeService.findById(id)
-				.orElseThrow(() ->
-						new ResponseStatusException(HttpStatus.NOT_FOUND,
-								"Cliente não encontrado"));
+	// TODO: Otimizar
+	@GetMapping()
+	public List<RecipeGet> getAllRecipesSrc(){
+		return recipeService.getAllRecipes();
 	}
 
-	// @GetMapping("/re/")
-	// public List<PostRecipeDTO> getAllRecipe(){
-	// 	return recipeService.getAllRecipe();
+	// TODO: Otimizar
+	@GetMapping("{id}")
+	public RecipeGet getRecipeById(@PathVariable Long id ){
+		return recipeService.getById(id);
+	}
 
-	// }
+//	@PostMapping
+//	@ResponseStatus(HttpStatus.CREATED)
+//	public void saveRecipe(@RequestBody @Valid Recipe recipe){
+//		recipeService.save(recipe);
+//	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void saveRecipe(@RequestBody @Valid Recipe recipe){
-		recipeService.save(recipe);
-	}
-
-	@PostMapping("/re/")
-	@ResponseStatus(HttpStatus.CREATED)
 	public void saveRecipeRe(@RequestBody @Valid PostRecipeDTO postRecipeDTO){
-
 		recipeService.saveRe(postRecipeDTO);
 	}
 
 	@PutMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update( @PathVariable Long id,
-						@RequestBody @Valid Recipe recipe ){
-		recipeService
-				.findById(id)
-				.map( existRecipe -> {
-					recipe.setId(existRecipe.getId());
-					recipeService.save(recipe);
-					return existRecipe;
-				}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-				"Receita não encontrada") );
+	public void updateRe( @PathVariable Long id,
+						@RequestBody @Valid PostRecipeDTO postRecipeDTO ){
+		recipeService.updateRe(postRecipeDTO, id);
 	}
 
 	@DeleteMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	// @ApiOperation("Deletes a book by id")
 	public void delete(@PathVariable Long id){
-		// log.info(" deleting book of id: {} ", id);
 		Recipe recipe = recipeService
 				.findById(id)
 				.orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND) );
@@ -97,6 +101,20 @@ public class RecipeController {
     //     }
     //     return outputStream.toByteArray();
     // }
+
+	//	@PutMapping("{id}")
+	//	@ResponseStatus(HttpStatus.NO_CONTENT)
+	//	public void update( @PathVariable Long id,
+	//						@RequestBody @Valid Recipe recipe ){
+	//		recipeService
+	//				.findById(id)
+	//				.map( existRecipe -> {
+	//					recipe.setId(existRecipe.getId());
+	//					recipeService.save(recipe);
+	//					return existRecipe;
+	//				}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+	//				"Receita não encontrada") );
+	//	}
 
 
 
