@@ -10,6 +10,8 @@ import br.rafanthx13.recipesserver.model.repository.*;
 import br.rafanthx13.recipesserver.service.BadgeService;
 import br.rafanthx13.recipesserver.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,11 +59,30 @@ public class RecipeServiceImpl implements RecipeService {
       }).collect(Collectors.toList());
   }
 
+    @Override
+    public Page<RecipeGet> getAllPageable(Pageable pageable){
+        return recipeGetRepository.findAll(pageable).map( recipeGet -> {
+            List<RecipeBadge> listRecipeBadge = recipeBadgeRepository.findReByRecipeId(recipeGet.getId());
+            String imageSource = imageRepository.findOnlyNameById(recipeGet.getImgSrc()).get();
+            // se tiver tira as badges tira de recipeBadgE
+            if(listRecipeBadge.size() != 0){
+                List<Badge> listBadge = listRecipeBadge.stream()
+                        .map(element -> element.getBadge_id())
+                        .collect(Collectors.toList());
+                recipeGet.setBadges(listBadge);
+            }
+            recipeGet.setImgSource(imageSource);
+            return recipeGet;
+        });
+    }
+
   @Override
   public Optional<Recipe> findById(Long id) {
     return recipeRepository.findById(id);
 //    return Optional.empty();
   }
+
+
 
     @Override
     public RecipeGet getById(Long id) {

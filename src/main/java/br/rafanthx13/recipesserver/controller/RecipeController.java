@@ -3,19 +3,18 @@ package br.rafanthx13.recipesserver.controller;
 import br.rafanthx13.recipesserver.model.dto.PostRecipeDTO;
 import br.rafanthx13.recipesserver.model.entity.Recipe;
 import br.rafanthx13.recipesserver.model.entity.RecipeGet;
-import br.rafanthx13.recipesserver.model.repository.ImageRepository;
-import br.rafanthx13.recipesserver.model.repository.RecipeBadgeRepository;
-import br.rafanthx13.recipesserver.model.repository.RecipeGetRepository;
-import br.rafanthx13.recipesserver.model.repository.RecipeRepository;
 import br.rafanthx13.recipesserver.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController // Controlador Rest
 @RequestMapping("/recipes") // Base URL
@@ -25,14 +24,6 @@ public class RecipeController {
 	// private final RecipeService recipeService;
 	@Autowired
 	private RecipeService recipeService;
-	@Autowired
-	private RecipeRepository recipeRepository;
-	@Autowired
-	private RecipeBadgeRepository recipeBadgeRepository;
-	@Autowired
-	private RecipeGetRepository recipeGetRepository;
-	@Autowired
-	private ImageRepository imageRepository;
 
 	// @@ Get que retorna Imagem também
 	/*
@@ -42,11 +33,30 @@ public class RecipeController {
 	}
 	*/
 
+    /*
+        Como funciona Pageable
+        + Se você não passa nenhum parâmetro mas pede um Pageable como no exemplo abaixo
+            então será construído um Pageable por default : page = 0 , size = 20
+        + As configurações do Pageable pela URL são
+        	+ lembrando: query params começa com ? e para cada parâmetro coloca & entre eles
+            +  ?size=number
+            +  ?page=number
+        + Usamos PageImpl<> para poder passa a quantidade total e elemento so select *
+            mesmo que agente mostre8 items por pagina, andar a quantidade total de elementos
+
+     */
 	// TODO: Otimizar
-	@GetMapping()
-	public List<RecipeGet> getAllRecipesSrc(){
-		return recipeService.getAllRecipes();
-	}
+    @GetMapping
+    public Page<RecipeGet> getAllRecipesPageable(Pageable pageRequest){
+        Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), 8); // 8 ITEMS POR PAGINA
+        Page<RecipeGet> listPages = recipeService.getAllPageable(pageable);
+        return new PageImpl<>(listPages.getContent(), pageable, listPages.getTotalElements());
+    }
+
+//	@GetMapping()
+//	public List<RecipeGet> getAllRecipesSrc(){
+//		return recipeService.getAllRecipes();
+//	}
 
 	// TODO: Otimizar
 	@GetMapping("{id}")

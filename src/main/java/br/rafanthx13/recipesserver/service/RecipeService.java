@@ -6,6 +6,8 @@ import java.util.Optional;
 import br.rafanthx13.recipesserver.model.dto.PostRecipeDTO;
 import br.rafanthx13.recipesserver.model.entity.Recipe;
 import br.rafanthx13.recipesserver.model.entity.RecipeGet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 public interface RecipeService {
@@ -27,5 +29,8 @@ public interface RecipeService {
   void updateRe(PostRecipeDTO postRecipeDTO, Long id);
 
   List<RecipeGet> getAllRecipes();
+
+
+  Page<RecipeGet> getAllPageable(Pageable pageable);
   
 }
