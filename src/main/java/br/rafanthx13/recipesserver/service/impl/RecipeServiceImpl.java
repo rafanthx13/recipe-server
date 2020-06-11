@@ -185,6 +185,9 @@ public class RecipeServiceImpl implements RecipeService {
       if(recipeRepository.existsByTitle(recipeWithBadges.getTitle())){
           throw errorNotFound("Receita com esse título já existe");
       }
+      if(imageRepository.count() > 25){
+          throw errorNotFound("Passou o limite de 25 imagens");
+      }
     System.out.println("----------------");
     System.out.println(recipeWithBadges.getImgSrc());
     Recipe recipe = new Recipe()
