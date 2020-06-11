@@ -1,5 +1,6 @@
+# Recipe Server BackEnd
 
-`mvn install`
+Executar pela Linha de Comando
 
 `mvn spring-boot:run`
 
