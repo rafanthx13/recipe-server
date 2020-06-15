@@ -12,3 +12,8 @@ public class RecipesServerApplication {
 
 }
 
+/*
+
+heroku info : colcoar S3 no mesmo local da minha aplicação heroku
+ */
+
